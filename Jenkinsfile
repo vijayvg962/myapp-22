@@ -1,5 +1,8 @@
 pipeline{
     agent any
+    triggers {
+      pollSCM '* * * * *'
+    }
     
     stages{
         stage("Maven Build"){
@@ -20,21 +23,7 @@ pipeline{
                }
             }
         }
-        stage("SonarQube Status"){
-            when {
-                branch "develop"
-            }
-            steps{
-               timeout(time: 1, unit: 'HOURS') {
-                   http://admin:admin@172.31.39.125/foo
-                   def qg = waitForQualityGate()
-                   if (qg.status != 'OK') {
-                       error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                           
-                    }
-                }
-            }
-        }
+        
         stage("Nexus"){
             when {
                 branch "develop"
