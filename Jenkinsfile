@@ -7,7 +7,7 @@ pipeline{
     stages{
         stage("Maven Build"){
             when {
-                branch "master"
+                branch "main"
             }
             steps{
                sh "mvn package"
