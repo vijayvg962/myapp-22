@@ -23,6 +23,21 @@ pipeline{
                }
             }
         }
+        stage("SonarQube Status"){
+            when {
+                branch "develop"
+            }
+            steps{
+               timeout(time: 1, unit: 'HOURS') {
+                   http:172.31.39.125:8080/sonarqube-webhook/
+                   def qg = waitForQualityGate()
+                   if (qg.status != 'OK') {
+                       error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                           
+                    }
+                }
+            }
+        }
         
         stage("Nexus"){
             when {
