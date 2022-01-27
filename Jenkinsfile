@@ -1,51 +1,47 @@
 pipeline{
     agent any
-    triggers {
-      pollSCM '* * * * *'
+    triggers{
+        pollSCM '* * * * *'
     }
-    
     stages{
-        stage("Maven Build"){
-            when {
-                branch "main"
+        stage("maven build"){
+            when{
+                branch"develop"
             }
             steps{
-               sh "mvn package"
+                sh "mvn package"
             }
         }
-        stage("SonarQube Analysis"){
-            when {
-                branch "main"
+        stage("sonarQube"){
+            when{
+                branch "develop"
             }
             steps{
-               withSonarQubeEnv('sonar7') {
-                    sh "mvn sonar:sonar"
-               }
+                echo "sonarqube analysis..."
             }
         }
-        
-        stage("Nexus"){
-            when {
-                branch "main"
+        stage("nexus"){
+            when{
+                branch "develop"
             }
             steps{
-               echo "uploading artifacts to nexus...."
+                echo "deploying to qa server...."
             }
         }
         stage("Deploy To QA"){
-            when {
-                branch "main"
+            when{
+                branch "qa"
             }
             steps{
-               echo "deploying to qa server...."
+                echo "deploying to qa server...."
             }
         }
         stage("Deploy To production"){
-            when {
-                branch "main"
+            when{
+                branch "master"
             }
             steps{
-               echo "deploying to main server...."
+                echo "deploying to master server..."
             }
         }
     }
